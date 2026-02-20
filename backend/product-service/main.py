@@ -97,17 +97,20 @@ SEED_PRODUCTS = [
 
 @app.on_event("startup")
 async def seed_database():
-    # Seed categories
-    cat_count = await categories_collection.count_documents({})
-    if cat_count == 0:
-        await categories_collection.insert_many(SEED_CATEGORIES)
-        print("Categories seeded successfully")
+    try:
+        # Seed categories
+        cat_count = await categories_collection.count_documents({})
+        if cat_count == 0:
+            await categories_collection.insert_many(SEED_CATEGORIES)
+            print("Categories seeded successfully")
 
-    # Seed products
-    prod_count = await products_collection.count_documents({})
-    if prod_count == 0:
-        await products_collection.insert_many(SEED_PRODUCTS)
-        print("Products seeded successfully")
+        # Seed products
+        prod_count = await products_collection.count_documents({})
+        if prod_count == 0:
+            await products_collection.insert_many(SEED_PRODUCTS)
+            print("Products seeded successfully")
+    except Exception as e:
+        print(f"Warning: Database seeding failed (will retry on first request): {e}")
 
 
 @app.get("/health")
