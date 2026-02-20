@@ -102,7 +102,7 @@ async def seed_database():
         cat_count = await categories_collection.count_documents({})
         if cat_count == 0:
             await categories_collection.insert_many(SEED_CATEGORIES)
-            print("Categories seeded successfully")
+            print(f"Categories seeded successfully ({len(SEED_CATEGORIES)} categories)")
 
         # Seed products
         prod_count = await products_collection.count_documents({})
