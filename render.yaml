@@ -1,0 +1,75 @@
+# Render Blueprint - ShopIt Backend Microservices
+# Deploy: Connect this repo on Render Dashboard → New → Blueprint
+
+services:
+  # ─── User Service (Auth) ───────────────────────────
+  - type: web
+    name: shopit-user-service
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend/user-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MONGO_URL
+        sync: false  # Set manually in Render dashboard (MongoDB Atlas connection string)
+      - key: JWT_SECRET
+        value: shopit-secret-key-2024
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # ─── Product Service ───────────────────────────────
+  - type: web
+    name: shopit-product-service
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend/product-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # ─── Delivery Service ──────────────────────────────
+  - type: web
+    name: shopit-delivery-service
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend/delivery-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # ─── Cart & Order Service ──────────────────────────
+  - type: web
+    name: shopit-cart-order-service
+    runtime: python
+    region: oregon
+    plan: free
+    rootDir: backend/cart-order-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: MONGO_URL
+        sync: false
+      - key: JWT_SECRET
+        value: shopit-secret-key-2024
+      - key: DELIVERY_SERVICE_URL
+        sync: false  # Set to: https://shopit-delivery-service.onrender.com
+      - key: PRODUCT_SERVICE_URL
+        sync: false  # Set to: https://shopit-product-service.onrender.com
+      - key: PYTHON_VERSION
+        value: 3.11.0
