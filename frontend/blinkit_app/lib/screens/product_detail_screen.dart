@@ -74,7 +74,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 product.imageUrl,
                 height: 280,
                 width: double.infinity,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 errorBuilder: (_, __, ___) => Center(
                   child: Icon(
                     Icons.shopping_bag,

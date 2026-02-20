@@ -453,7 +453,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           product.imageUrl,
                           height: 110,
                           width: double.infinity,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.contain,
                           errorBuilder: (_, __, ___) => Center(
                             child: Icon(
                               Icons.shopping_bag,
