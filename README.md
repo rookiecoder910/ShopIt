@@ -7,28 +7,55 @@
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.104-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Flutter](https://img.shields.io/badge/Flutter-3.0+-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
-[![MongoDB](https://img.shields.io/badge/MongoDB-7.0-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://mongodb.com)
+[![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-Cloud-47A248?style=for-the-badge&logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?style=for-the-badge&logo=render&logoColor=white)](https://render.com)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
 
-A production-ready quick-commerce clone inspired by Blinkit, featuring a **microservices backend** (Python/FastAPI), a **cross-platform Flutter frontend** (Android + Web), **MongoDB** for persistence, and full **Docker Compose** & **Kubernetes** deployment support.
+A production-ready quick-commerce clone inspired by Blinkit, featuring a **microservices backend** (Python/FastAPI), a **cross-platform Flutter frontend** (Android + Web), **MongoDB Atlas** for cloud persistence, **Render** for live deployment, and full **Docker Compose** & **Kubernetes** support.
 
-[Features](#-features) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deployment](#-deployment)
+[Features](#-features) · [Live Demo](#-live-demo) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deployment](#-deployment)
 
 </div>
+
+---
+
+## 🌐 Live Demo
+
+The backend microservices are **deployed and live** on Render (free tier):
+
+| Service | Live URL |
+|---------|----------|
+| User Service | `https://shopit-user-service.onrender.com` |
+| Product Service | `https://shopit-product-service.onrender.com` |
+| Cart & Order Service | `https://shopit-cart-order-service.onrender.com` |
+| Delivery Service | `https://shopit-delivery-service.onrender.com` |
+
+> **Note:** Free-tier Render services spin down after 15 minutes of inactivity. The first request may take ~30-60 seconds while the service cold-starts.
+
+**Quick test:**
+```bash
+# Check if product service is live
+curl https://shopit-product-service.onrender.com/health
+
+# Browse products
+curl https://shopit-product-service.onrender.com/products
+```
 
 ---
 
 ## ✨ Features
 
 - **User Authentication** — Register, login, JWT-based session management, OTP verification
-- **Product Catalog** — Browse 24+ products across 6 categories with search & pagination
+- **Product Catalog** — Browse 20+ products across 6 categories with search & pagination
 - **Shopping Cart** — Add, remove, update quantities with real-time price calculation
 - **Order Management** — Place orders, view order history, track delivery status
 - **Delivery Tracking** — Real-time order status pipeline: Placed → Packed → Out for Delivery → Delivered
 - **Responsive UI** — Adaptive layout for mobile (Android) and web browsers
-- **Microservices** — 5 independently deployable services communicating via REST
-- **API Gateway** — Single entry point for all client-service communication
+- **Microservices** — 4 independently deployable backend services communicating via REST
+- **API Gateway** — Optional single entry point for local development
+- **Cloud Deployed** — Live on Render with MongoDB Atlas (zero-cost hosting)
+- **Local/Cloud Toggle** — Single flag in `api_config.dart` to switch between local and cloud backends
 - **Auto Seed Data** — Product catalog auto-seeds on first startup (no manual setup needed)
 - **Containerized** — One-command deployment with Docker Compose
 - **K8s Ready** — Kubernetes manifests included for cloud deployment
@@ -37,20 +64,62 @@ A production-ready quick-commerce clone inspired by Blinkit, featuring a **micro
 
 ## 🏗 Architecture
 
+### Cloud Mode (Production — Render + MongoDB Atlas)
+
 ```
 ┌──────────────────────────────────────────────────────────────────────┐
 │                          CLIENT LAYER                                │
 │                                                                      │
 │    ┌─────────────────┐              ┌─────────────────┐              │
 │    │  Flutter Mobile  │              │   Flutter Web   │              │
-│    │   (Android/iOS)  │              │    (Chrome)     │              │
+│    │    (Android)     │              │    (Chrome)     │              │
 │    └────────┬─────────┘              └────────┬────────┘              │
-│             │  http://10.0.2.2:PORT           │  http://localhost:PORT│
+│             │         HTTPS (Render URLs)     │                      │
 └─────────────┼─────────────────────────────────┼──────────────────────┘
               │                                 │
               ▼                                 ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                        API GATEWAY :8000                             │
+│                    RENDER CLOUD (Free Tier)                          │
+│                                                                      │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐       │
+│  │   User     │ │  Product   │ │ Cart+Order │ │  Delivery  │       │
+│  │  Service   │ │  Service   │ │  Service   │ │  Service   │       │
+│  │            │ │            │ │            │ │            │       │
+│  │ • Register │ │ • Catalog  │ │ • Cart     │ │ • Status   │       │
+│  │ • Login    │ │ • Search   │ │ • Orders   │ │ • Tracking │       │
+│  │ • JWT Auth │ │ • Category │ │ • Checkout │ │ • History  │       │
+│  │ • Profile  │ │ • Paginate │ │ • History  │ │ • Advance  │       │
+│  └─────┬──────┘ └─────┬──────┘ └──┬───┬─────┘ └─────┬──────┘       │
+│        │              │           │   │              │              │
+│        │              │           │   └──────────────┘              │
+│        │              │           │   (inter-service calls)         │
+└────────┼──────────────┼───────────┼─────────────────────────────────┘
+         │              │           │
+         ▼              ▼           ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                     MongoDB Atlas (Cloud)                            │
+│                                                                      │
+│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
+│   │user_service_db│  │product_svc_db│  │cart_order_db │  ...         │
+│   └──────────────┘  └──────────────┘  └──────────────┘              │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### Local Mode (Development — Docker / localhost)
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                          CLIENT LAYER                                │
+│                                                                      │
+│    ┌─────────────────┐              ┌─────────────────┐              │
+│    │  Flutter Mobile  │              │   Flutter Web   │              │
+│    │    (Android)     │              │    (Chrome)     │              │
+│    └────────┬─────────┘              └────────┬────────┘              │
+└─────────────┼─────────────────────────────────┼──────────────────────┘
+              │                                 │
+              ▼                                 ▼
+┌──────────────────────────────────────────────────────────────────────┐
+│                   API GATEWAY (optional) :8000                       │
 │            Routes /api/* requests to backend services                │
 └──────┬──────────────┬──────────────┬──────────────┬──────────────────┘
        │              │              │              │
@@ -59,24 +128,15 @@ A production-ready quick-commerce clone inspired by Blinkit, featuring a **micro
 │   User     │ │  Product   │ │ Cart+Order │ │  Delivery  │
 │  Service   │ │  Service   │ │  Service   │ │  Service   │
 │   :8001    │ │   :8002    │ │   :8003    │ │   :8004    │
-│            │ │            │ │            │ │            │
-│ • Register │ │ • Catalog  │ │ • Cart     │ │ • Status   │
-│ • Login    │ │ • Search   │ │ • Orders   │ │ • Tracking │
-│ • JWT Auth │ │ • Category │ │ • Checkout │ │ • History  │
-│ • Profile  │ │ • Paginate │ │ • History  │ │ • Advance  │
-└─────┬──────┘ └─────┬──────┘ └──┬───┬─────┘ └─────┬──────┘
-      │              │           │   │              │
-      │              │           │   └──────────────┘
-      │              │           │   (inter-service calls)
-      ▼              ▼           ▼
+└─────┬──────┘ └─────┬──────┘ └─────┬───────┘ └─────┬──────┘
+      │              │              │                │
+      ▼              ▼              ▼                ▼
 ┌──────────────────────────────────────────────────────────────────────┐
-│                        MongoDB 7.0 :27017                            │
-│                                                                      │
-│   ┌──────────────┐  ┌──────────────┐  ┌──────────────┐              │
-│   │user_service_db│  │product_svc_db│  │cart_order_db │  ...         │
-│   └──────────────┘  └──────────────┘  └──────────────┘              │
+│                    MongoDB 7.0 (Docker) :27017                       │
 └──────────────────────────────────────────────────────────────────────┘
 ```
+
+> **Toggle between modes:** Set `useLocalBackend` in `lib/config/api_config.dart` to `true` (local) or `false` (cloud).
 
 ---
 
@@ -154,6 +214,7 @@ shopit-backend/
 │   └── api-gateway-deployment.yaml
 │
 ├── docker-compose.yaml             # One-command full stack deployment
+├── render.yaml                     # Render Blueprint (cloud deployment)
 └── README.md
 ```
 
@@ -166,11 +227,13 @@ shopit-backend/
 | **Frontend** | Flutter 3.0+, Dart | Cross-platform UI (Android + Web) |
 | **State Mgmt** | Provider | Reactive state management |
 | **Backend** | Python 3.11+, FastAPI | Async REST microservices |
-| **Database** | MongoDB 7.0 | NoSQL document store |
-| **DB Driver** | Motor (async) | Non-blocking MongoDB operations |
+| **Database** | MongoDB Atlas (Cloud) | Managed NoSQL document store |
+| **DB (Local)** | MongoDB 7.0 (Docker) | Local development database |
+| **DB Driver** | Motor (async), dnspython | Non-blocking MongoDB operations + SRV resolution |
 | **Auth** | JWT (PyJWT), bcrypt | Token-based authentication |
 | **HTTP Client** | httpx | Async inter-service communication |
-| **Gateway** | FastAPI + httpx | API routing & proxying |
+| **Gateway** | FastAPI + httpx | API routing & proxying (local dev) |
+| **Cloud Hosting** | Render (Free Tier) | Live backend deployment |
 | **Containers** | Docker, Docker Compose | Containerization & orchestration |
 | **Orchestration** | Kubernetes | Production deployment manifests |
 
@@ -233,7 +296,7 @@ python -m venv .myenv
 # macOS/Linux
 source .myenv/bin/activate
 
-pip install fastapi uvicorn motor pymongo pydantic python-multipart httpx PyJWT bcrypt "pydantic[email]"
+pip install fastapi uvicorn motor pymongo pydantic python-multipart httpx PyJWT bcrypt dnspython "pydantic[email]"
 ```
 
 #### 3. Start each microservice (in separate terminals)
@@ -298,10 +361,10 @@ flutter emulators --launch <emulator_name>
 flutter run -d <device_id>
 ```
 
-> **Platform-Aware API Config:** The app automatically detects the platform:
-> - **Web** → `http://localhost`
-> - **Android Emulator** → `http://10.0.2.2` (routes to host machine's localhost)
-> - **Physical Device** → Update `lib/config/api_config.dart` with your machine's IP
+> **Local vs Cloud Backend:** The app has a `useLocalBackend` toggle in `lib/config/api_config.dart`:
+> - **`useLocalBackend = false`** (default) → Connects to live Render cloud services (HTTPS)
+> - **`useLocalBackend = true`** → Connects to `localhost` for local development
+> - For **Android Emulator** local dev: run `adb reverse tcp:800X tcp:800X` for each service port
 
 ---
 
@@ -345,7 +408,7 @@ Handles authentication and user management with bcrypt password hashing and JWT 
 
 ### Product Service (`:8002`)
 
-Manages the product catalog with 6 categories and 24 pre-seeded products. Auto-seeds on first startup.
+Manages the product catalog with 6 categories and 20 pre-seeded products. Auto-seeds on first startup.
 
 | Endpoint | Method | Auth | Description |
 |----------|--------|------|-------------|
@@ -462,7 +525,31 @@ Single entry point that proxies all client requests to the appropriate microserv
 
 ## 🐳 Deployment
 
-### Docker Compose
+### Option 1: Render (Cloud — Recommended for Production)
+
+The project includes a `render.yaml` Blueprint for one-click cloud deployment:
+
+1. **Fork/push** this repo to your GitHub account
+2. **Create a [MongoDB Atlas](https://www.mongodb.com/atlas)** free cluster (M0)
+   - Create a database user with password
+   - Add `0.0.0.0/0` to Network Access (IP whitelist)
+   - Copy the `mongodb+srv://...` connection string
+3. *Option 3: *Go to [Render Dashboard](https://dashboard.render.com)** → New → Blueprint
+   - Connect your GitHub repo
+   - Render will detect `render.yaml` and create 4 services
+4. **Set environment variables** on each service in the Render dashboard:
+   - `MONGO_URL` = your MongoDB Atlas connection string
+   - For cart-order-service, also set:
+     - `DELIVERY_SERVICE_URL` = `https://shopit-delivery-service.onrender.com`
+     - `PRODUCT_SERVICE_URL` = `https://shopit-product-service.onrender.com`
+5. **Deploy** — services will build and start automatically
+6. Products auto-seed on first startup
+
+> **Free tier note:** Services spin down after 15 min of inactivity. First request after idle takes ~30-60s.
+
+---
+
+### Option 2: Docker Compose (Local)
 
 ```bash
 docker-compose up --build -d    # Start in background
@@ -479,12 +566,13 @@ Pre-built manifests are included for all services:
 # Deploy everything
 kubectl apply -f k8s/
 
-# Verify pods
-kubectl get pods
-
-# Verify services
-kubectl get services
-
+# Verify pods(use Atlas `mongodb+srv://...` for cloud) |
+| `JWT_SECRET` | User, Cart-Order | `shopit-secret-key-2024` | JWT signing secret |
+| `USER_SERVICE_URL` | API Gateway | `http://localhost:8001` | User service URL |
+| `PRODUCT_SERVICE_URL` | API Gateway, Cart-Order | `http://localhost:8002` | Product service URL (Render URL for cloud) |
+| `CART_ORDER_SERVICE_URL` | API Gateway | `http://localhost:8003` | Cart & order service URL |
+| `DELIVERY_SERVICE_URL` | API Gateway, Cart-Order | `http://localhost:8004` | Delivery service URL (Render URL for cloud) |
+| `PORT` | All (Render) | — | Auto-set by Render; used in `uvicorn --port $PORT`
 # View logs
 kubectl logs -f deployment/user-service
 ```
