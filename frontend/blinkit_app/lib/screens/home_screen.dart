@@ -441,25 +441,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Discount badge + Image
                 Stack(
                   children: [
-                    Container(
-                      height: 110,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[100],
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
+                    ClipRRect(
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(12),
                       ),
-                      child: Center(
+                      child: Container(
+                        height: 110,
+                        width: double.infinity,
+                        color: Colors.grey[100],
                         child: Image.network(
                           product.imageUrl,
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.contain,
-                          errorBuilder: (_, __, ___) => Icon(
-                            Icons.shopping_bag,
-                            size: 48,
-                            color: Colors.grey[400],
+                          height: 110,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => Center(
+                            child: Icon(
+                              Icons.shopping_bag,
+                              size: 48,
+                              color: Colors.grey[400],
+                            ),
                           ),
                         ),
                       ),

@@ -67,15 +67,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: [
             // Product Image
             Container(
-              height: 250,
+              height: 280,
               width: double.infinity,
               color: Colors.grey[100],
-              child: Center(
-                child: Image.network(
-                  product.imageUrl,
-                  height: 150,
-                  width: 150,
-                  errorBuilder: (_, __, ___) => Icon(
+              child: Image.network(
+                product.imageUrl,
+                height: 280,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Center(
+                  child: Icon(
                     Icons.shopping_bag,
                     size: 100,
                     color: Colors.grey[400],
