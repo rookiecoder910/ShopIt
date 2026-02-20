@@ -5,9 +5,10 @@ class ApiConfig {
     if (kIsWeb) {
       return 'http://localhost';
     }
-    // Android emulator uses 10.0.2.2 to reach host machine's localhost
+    // Android (emulator & physical): use 127.0.0.1 with adb reverse port forwarding
+    // Run: adb reverse tcp:8001 tcp:8001 (repeat for 8002, 8003, 8004)
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2';
+      return 'http://127.0.0.1';
     }
     // iOS simulator / desktop
     return 'http://localhost';

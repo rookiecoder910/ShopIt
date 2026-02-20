@@ -80,6 +80,48 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         actions: [
+          Consumer<CartProvider>(
+            builder: (context, cart, child) => IconButton(
+              icon: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  const Icon(Icons.shopping_cart, size: 26),
+                  if (cart.itemCount > 0)
+                    Positioned(
+                      right: -6,
+                      top: -6,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 18,
+                          minHeight: 18,
+                        ),
+                        child: Text(
+                          '${cart.itemCount}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CartScreen()),
+                );
+              },
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.receipt_long),
             onPressed: () {
