@@ -251,34 +251,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               ),
             ],
 
-            // Simulate button (for demo)
-            if (order.status != 'DELIVERED') ...[
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () async {
-                    try {
-                      await OrderService.advanceOrderStatus(
-                          order.orderId);
-                      final auth =
-                          Provider.of<AuthProvider>(context, listen: false);
-                      Provider.of<OrderProvider>(context, listen: false)
-                          .loadOrders(auth.token!);
-                    } catch (e) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error: $e')),
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.fast_forward),
-                  label: const Text('Simulate Next Status'),
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFF0C831F),
-                  ),
-                ),
-              ),
-            ],
+
           ],
         ),
       ),

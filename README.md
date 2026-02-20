@@ -577,6 +577,31 @@ kubectl apply -f k8s/
 kubectl logs -f deployment/user-service
 ```
 
+### Cloud (Render)
+
+```bash
+# Health check
+curl https://shopit-product-service.onrender.com/health
+
+# Browse products
+curl https://shopit-product-service.onrender.com/products
+
+# Search products
+curl "https://shopit-product-service.onrender.com/products?search=milk"
+
+# Register a new user
+curl -X POST https://shopit-user-service.onrender.com/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test User","email":"test@example.com","password":"pass123","phone":"9876543210"}'
+
+# Login
+curl -X POST https://shopit-user-service.onrender.com/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"pass123"}'
+```
+
+### Local Development
+
 **K8s Resources included:**
 - `mongodb-deployment.yaml` — MongoDB with persistent volume
 - `user-service-deployment.yaml`
@@ -607,7 +632,7 @@ kubectl logs -f deployment/user-service
 curl -X POST http://localhost:8001/register \
   -H "Content-Type: application/json" \
   -d '{"name":"Test User","email":"test@example.com","password":"pass123","phone":"9876543210"}'
-
+, MongoDB Atlas & Render
 # Login
 curl -X POST http://localhost:8001/login \
   -H "Content-Type: application/json" \
