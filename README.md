@@ -1,6 +1,8 @@
 <div align="center">
 
-# 🛒 ShopIt
+<img src="frontend/blinkit_app/logo/shopit_applogo.png" alt="ShopIt Logo" width="180"/>
+
+# ShopIt
 
 ### A Full-Stack Quick Commerce App
 
@@ -12,7 +14,7 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io)
 
-A production-ready quick-commerce clone inspired by Blinkit, featuring a **microservices backend** (Python/FastAPI), a **cross-platform Flutter frontend** (Android + Web), **MongoDB Atlas** for cloud persistence, **Render** for live deployment, and full **Docker Compose** & **Kubernetes** support.
+A production-ready quick-commerce clone inspired by Blinkit, featuring a **microservices backend** (Python/FastAPI), a **cross-platform Flutter frontend** (Android + Web), **MongoDB Atlas** for cloud persistence, **Cloudinary** for optimized product images, **Render** for live deployment, and full **Docker Compose** & **Kubernetes** support.
 
 [Features](#-features) · [Live Demo](#-live-demo) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deployment](#-deployment)
 
@@ -47,7 +49,7 @@ curl https://shopit-product-service.onrender.com/products
 ## ✨ Features
 
 - **User Authentication** — Register, login, JWT-based session management, OTP verification
-- **Product Catalog** — Browse 20+ products across 6 categories with search & pagination
+- **Product Catalog** — Browse 24 products across 6 categories with search & pagination
 - **Shopping Cart** — Add, remove, update quantities with real-time price calculation
 - **Order Management** — Place orders, view order history, track delivery status
 - **Delivery Tracking** — Real-time order status pipeline: Placed → Packed → Out for Delivery → Delivered
@@ -55,6 +57,8 @@ curl https://shopit-product-service.onrender.com/products
 - **Microservices** — 4 independently deployable backend services communicating via REST
 - **API Gateway** — Optional single entry point for local development
 - **Cloud Deployed** — Live on Render with MongoDB Atlas (zero-cost hosting)
+- **Cloudinary Images** — Product images hosted on Cloudinary with 800×800 auto-optimization
+- **Custom App Icon** — Branded ShopIt launcher icon with adaptive icon support
 - **Local/Cloud Toggle** — Single flag in `api_config.dart` to switch between local and cloud backends
 - **Auto Seed Data** — Product catalog auto-seeds on first startup (no manual setup needed)
 - **Containerized** — One-command deployment with Docker Compose
@@ -201,6 +205,8 @@ shopit-backend/
 │       │       ├── cart_screen.dart
 │       │       ├── order_tracking_screen.dart
 │       │       └── order_confirmation_screen.dart
+│       ├── logo/
+│       │   └── shopit_applogo.png  # App launcher icon source
 │       ├── android/                # Android platform config
 │       ├── web/                    # Web platform config
 │       └── pubspec.yaml
@@ -228,6 +234,7 @@ shopit-backend/
 | **State Mgmt** | Provider | Reactive state management |
 | **Backend** | Python 3.11+, FastAPI | Async REST microservices |
 | **Database** | MongoDB Atlas (Cloud) | Managed NoSQL document store |
+| **Image CDN** | Cloudinary | Optimized product image hosting (800×800, auto-format) |
 | **DB (Local)** | MongoDB 7.0 (Docker) | Local development database |
 | **DB Driver** | Motor (async), dnspython | Non-blocking MongoDB operations + SRV resolution |
 | **Auth** | JWT (PyJWT), bcrypt | Token-based authentication |
@@ -408,13 +415,14 @@ Handles authentication and user management with bcrypt password hashing and JWT 
 
 ### Product Service (`:8002`)
 
-Manages the product catalog with 6 categories and 20 pre-seeded products. Auto-seeds on first startup.
+Manages the product catalog with 6 categories and 24 pre-seeded products with Cloudinary-hosted images. Auto-seeds on first startup. Supports force re-seeding via `/reseed`.
 
 | Endpoint | Method | Auth | Description |
 |----------|--------|------|-------------|
 | `/products` | GET | No | List products (paginated) |
 | `/products/{product_id}` | GET | No | Get product details |
 | `/categories` | GET | No | List all categories |
+| `/reseed` | POST | No | Force re-seed all products & categories |
 | `/health` | GET | No | Service health check |
 
 **Query Parameters for `/products`:**
@@ -429,12 +437,12 @@ Manages the product catalog with 6 categories and 20 pre-seeded products. Auto-s
 **Product Categories:**
 | Category | Products |
 |----------|----------|
-| Fruits & Vegetables | Banana, Apple, Tomato, Onion, Potato |
-| Dairy & Bread | Amul Milk, White Bread, Eggs, Butter, Curd |
-| Snacks | Lays, Oreo, Kurkure, Dark Fantasy |
-| Beverages | Coca Cola, Minute Maid, Bisleri Water, Red Bull |
-| Instant Food | Maggi Noodles, Cup Noodles, Poha Mix |
-| Personal Care | Dove Soap, Head & Shoulders, Colgate |
+| Fruits & Vegetables | Banana, Apple, Tomato, Onion, Potato (5) |
+| Dairy & Bread | Amul Milk, White Bread, Eggs, Amul Butter, Amul Curd (5) |
+| Snacks | Lays Classic, Oreo, Kurkure Masala, Dark Fantasy Choco Fills (4) |
+| Beverages | Coca Cola, Minute Maid, Bisleri Water, Red Bull (4) |
+| Instant Food | Maggi Noodles, Cup Noodles, Poha Mix (3) |
+| Personal Care | Dove Soap, Head & Shoulders, Colgate Toothpaste (3) |
 
 ---
 
@@ -682,6 +690,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 <div align="center">
 
-**Built with ❤️ using FastAPI, Flutter & MongoDB**
+**Built with ❤️ using FastAPI, Flutter, MongoDB & Cloudinary**
 
 </div>
