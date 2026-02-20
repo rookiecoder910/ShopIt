@@ -1,0 +1,44 @@
+# k8s/cart-order-service-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-order-service
+  labels:
+    app: cart-order-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart-order-service
+  template:
+    metadata:
+      labels:
+        app: cart-order-service
+    spec:
+      containers:
+        - name: cart-order-service
+          image: blinkit-cart-order-service:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8003
+          env:
+            - name: MONGO_URL
+              value: "mongodb://mongodb:27017"
+            - name: JWT_SECRET
+              value: "blinkit-secret-key-2024"
+            - name: DELIVERY_SERVICE_URL
+              value: "http://delivery-service:8004"
+            - name: PRODUCT_SERVICE_URL
+              value: "http://product-service:8002"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-order-service
+spec:
+  selector:
+    app: cart-order-service
+  ports:
+    - port: 8003
+      targetPort: 8003
+  type: ClusterIP
