@@ -259,8 +259,8 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                 child: OutlinedButton.icon(
                   onPressed: () async {
                     try {
-                      await OrderService.advanceOrderStatus(order.orderId);
                       final auth = Provider.of<AuthProvider>(context, listen: false);
+                      await OrderService.advanceOrderStatus(order.orderId, auth.token!);
                       await Provider.of<OrderProvider>(context, listen: false)
                           .loadOrders(auth.token!);
                       if (mounted) {

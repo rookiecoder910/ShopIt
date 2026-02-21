@@ -32,9 +32,13 @@ class OrderService {
     }
   }
 
-  static Future<void> advanceOrderStatus(String orderId) async {
+  static Future<void> advanceOrderStatus(String orderId, String token) async {
     final response = await http.post(
-      Uri.parse('${ApiConfig.deliveryServiceUrl}/order/$orderId/advance'),
+      Uri.parse('${ApiConfig.cartOrderServiceUrl}/order/$orderId/advance'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
     );
 
     if (response.statusCode != 200) {

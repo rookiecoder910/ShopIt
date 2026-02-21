@@ -214,10 +214,10 @@ async def get_orders(user_id: str = Depends(get_user_id)):
         {"user_id": user_id}, {"_id": 0}
     ).sort("created_at", -1).to_list(50)
 
-    # Fetch latest status from delivery service
+    # Fetch latest status from delivery service (best-effort, short timeout)
     for order in orders:
         try:
-            async with httpx.AsyncClient() as client_http:
+            async with httpx.AsyncClient(timeout=3.0) as client_http:
                 resp = await client_http.get(
                     f"{DELIVERY_SERVICE_URL}/order/{order['order_id']}/status"
                 )
@@ -230,6 +230,43 @@ async def get_orders(user_id: str = Depends(get_user_id)):
     return {"orders": orders}
 
 
+@app.post("/order/{order_id}/advance")
+async def advance_order_status(order_id: str, user_id: str = Depends(get_user_id)):
+    """Advance order to next status: PLACED→PACKED→OUT_FOR_DELIVERY→DELIVERED"""
+    STATUS_FLOW = {
+        "PLACED": "PACKED",
+        "PACKED": "OUT_FOR_DELIVERY",
+        "OUT_FOR_DELIVERY": "DELIVERED",
+    }
+
+    order = await orders_collection.find_one({"order_id": order_id, "user_id": user_id})
+    if not order:
+        raise HTTPException(status_code=404, detail="Order not found")
+
+    current = order["status"]
+    next_status = STATUS_FLOW.get(current)
+    if not next_status:
+        raise HTTPException(status_code=400, detail="Order already delivered")
+
+    await orders_collection.update_one(
+        {"order_id": order_id},
+        {"$set": {"status": next_status, "updated_at": datetime.utcnow().isoformat()}},
+    )
+
+    # Also try to update delivery service (best-effort)
+    try:
+        async with httpx.AsyncClient(timeout=3.0) as client_http:
+            await client_http.post(f"{DELIVERY_SERVICE_URL}/order/{order_id}/advance")
+    except Exception:
+        pass
+
+    return {
+        "order_id": order_id,
+        "previous_status": current,
+        "current_status": next_status,
+    }
+
+
 @app.get("/orders/{order_id}")
 async def get_order(order_id: str, user_id: str = Depends(get_user_id)):
     order = await orders_collection.find_one(
@@ -238,9 +275,9 @@ async def get_order(order_id: str, user_id: str = Depends(get_user_id)):
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
 
-    # Fetch latest status
+    # Fetch latest status (best-effort, short timeout)
     try:
-        async with httpx.AsyncClient() as client_http:
+        async with httpx.AsyncClient(timeout=3.0) as client_http:
             resp = await client_http.get(
                 f"{DELIVERY_SERVICE_URL}/order/{order_id}/status"
             )
