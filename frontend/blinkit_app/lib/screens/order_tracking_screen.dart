@@ -251,6 +251,56 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
               ),
             ],
 
+            // Simulate Next Status button
+            if (order.status != 'DELIVERED') ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () async {
+                    try {
+                      await OrderService.advanceOrderStatus(order.orderId);
+                      final auth = Provider.of<AuthProvider>(context, listen: false);
+                      await Provider.of<OrderProvider>(context, listen: false)
+                          .loadOrders(auth.token!);
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Order status advanced!'),
+                            backgroundColor: Color(0xFF0C831F),
+                            duration: Duration(seconds: 1),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to update: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  icon: const Icon(Icons.fast_forward, color: Color(0xFF0C831F)),
+                  label: const Text(
+                    'Simulate Next Status',
+                    style: TextStyle(
+                      color: Color(0xFF0C831F),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFF0C831F)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                ),
+              ),
+            ],
 
           ],
         ),
