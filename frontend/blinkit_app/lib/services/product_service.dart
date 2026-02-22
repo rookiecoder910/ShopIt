@@ -20,13 +20,14 @@ class ProductService {
   }
 
   static Future<List<ProductModel>> getProducts({String? category, String? search}) async {
-    String url = '${ApiConfig.productServiceUrl}/products';
-    List<String> params = [];
-    if (category != null) params.add('category=$category');
-    if (search != null) params.add('search=$search');
-    if (params.isNotEmpty) url += '?${params.join('&')}';
+    final Map<String, String> queryParams = {};
+    if (category != null) queryParams['category'] = category;
+    if (search != null) queryParams['search'] = search;
 
-    final response = await http.get(Uri.parse(url));
+    final uri = Uri.parse('${ApiConfig.productServiceUrl}/products')
+        .replace(queryParameters: queryParams.isNotEmpty ? queryParams : null);
+
+    final response = await http.get(uri);
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
