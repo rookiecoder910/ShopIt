@@ -16,7 +16,7 @@
 
 A production-ready quick-commerce clone inspired by Blinkit, featuring a **microservices backend** (Python/FastAPI), a **cross-platform Flutter frontend** (Android + Web), **MongoDB Atlas** for cloud persistence, **Cloudinary** for optimized product images, **Render** for live deployment, and full **Docker Compose** & **Kubernetes** support.
 
-[Features](#-features) · [Live Demo](#-live-demo) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deployment](#-deployment)
+[Features](#-features) · [Live Demo](#-live-demo) · [Video Demo](#-video-demo) · [Screenshots](#-screenshots) · [Architecture](#-architecture) · [Quick Start](#-quick-start) · [API Reference](#-api-reference) · [Deployment](#-deployment)
 
 </div>
 
@@ -43,6 +43,34 @@ curl https://shopit-product-service.onrender.com/health
 # Browse products
 curl https://shopit-product-service.onrender.com/products
 ```
+
+---
+
+## 🎬 Video Demo
+
+<div align="center">
+
+[![Watch the Demo](https://img.shields.io/badge/▶_Watch_Demo-Google_Drive-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1XEW79pRq-L_oNKO-_MECTozJ2fwZwe7r/view?usp=sharing)
+
+> Click the button above to watch a full walkthrough of the ShopIt app — browsing products, adding to cart, placing orders, and tracking delivery.
+
+</div>
+
+---
+
+## 📸 Screenshots
+
+<div align="center">
+
+| Login Screen | Home Screen |
+|:---:|:---:|
+| <img src="https://drive.google.com/uc?export=view&id=18z8EZECIIiUL2_4RJaNizRJXu13mXujd" width="300"/> | <img src="https://drive.google.com/uc?export=view&id=1i7KcpZrDI1B0sKhSwABGJxIFH22wbDd5" width="300"/> |
+
+| Cart Screen | My Orders |
+|:---:|:---:|
+| <img src="https://drive.google.com/uc?export=view&id=1MKaORN58aQfTFDTh3xSumnacanAVVJfD" width="300"/> | <img src="https://drive.google.com/uc?export=view&id=1rOHVvn986wijOQYWGa8nrZtzG4zczEro" width="300"/> |
+
+</div>
 
 ---
 
