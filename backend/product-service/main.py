@@ -88,7 +88,7 @@ SEED_PRODUCTS = [
     {"product_id": "prod-21", "name": "Poha Mix",  "description": "Instant poha ready mix",  "price": 55.0,  "category": "Instant Food",  "image_url": "https://res.cloudinary.com/dfqh2ngos/image/upload/v1771766307/777_Khatha-Meetha-Instant-MixFrontStraight200g-1_oeltxa.jpg",  "availability": True,  "unit": "200 g",  "discount_percent": 0},
 
     # ── Personal Care ───────────────────────────────────────────────
-    {"product_id": "prod-22", "name": "Dove Soap",  "description": "Moisturizing beauty soap",  "price": 55.0,  "category": "Personal Care",  "image_url": "https://cdn-icons-png.flaticon.com/128/2553/2553642.png",  "availability": True,  "unit": "100 g",  "discount_percent": 5},
+    {"product_id": "prod-22", "name": "Dove Soap",  "description": "Moisturizing beauty soap",  "price": 55.0,  "category": "Personal Care",  "image_url": "https://res.cloudinary.com/dfqh2ngos/image/upload/v1771876121/61DUb3Fgn_L._AC_UF1000_1000_QL80__yv1khj.jpg",  "availability": True,  "unit": "100 g",  "discount_percent": 5},
     {"product_id": "prod-23", "name": "Head & Shoulders Shampoo",  "description": "Anti-dandruff shampoo",  "price": 180.0,  "category": "Personal Care",  "image_url": "https://res.cloudinary.com/dfqh2ngos/image/upload/v1771766353/bae5bb21-e1bc-404b-bae4-c48f9ff4d892.3e8498ec6801c807edeb21f55bca0717_u1p3b1.jpg",  "availability": True,  "unit": "180 ml",  "discount_percent": 10},
     {"product_id": "prod-24", "name": "Colgate Toothpaste",  "description": "Cavity protection toothpaste",  "price": 95.0,  "category": "Personal Care",  "image_url": "https://res.cloudinary.com/dfqh2ngos/image/upload/v1771766375/0003500099667_i2su9l.jpg",  "availability": True,  "unit": "150 g",  "discount_percent": 0},
 ]
