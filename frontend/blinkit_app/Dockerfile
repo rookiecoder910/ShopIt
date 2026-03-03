@@ -10,8 +10,8 @@ RUN flutter pub get
 # Copy the rest of the app
 COPY . .
 
-# Build for web with HTML renderer (better compatibility)
-RUN flutter build web --release --web-renderer html
+# Build for web
+RUN flutter build web --release
 
 # Stage 2: Serve with Nginx
 FROM nginx:alpine
