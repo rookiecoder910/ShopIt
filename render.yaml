@@ -1,7 +1,16 @@
-# Render Blueprint - ShopIt Backend Microservices
+# Render Blueprint - ShopIt Microservices + Frontend
 # Deploy: Connect this repo on Render Dashboard → New → Blueprint
 
 services:
+  # ─── Flutter Web Frontend (Docker) ─────────────────
+  - type: web
+    name: shopit-frontend
+    runtime: docker
+    region: oregon
+    plan: free
+    rootDir: frontend/blinkit_app
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /
   # ─── User Service (Auth) ───────────────────────────
   - type: web
     name: shopit-user-service

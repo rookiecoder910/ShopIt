@@ -1,0 +1,27 @@
+# Build artifacts
+build/
+.dart_tool/
+.packages
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test and documentation
+test/
+*.md
+
+# Android/iOS (not needed for web build)
+android/.gradle/
+android/app/build/
+ios/Pods/
+ios/.symlinks/
+
+# Misc
+.git/
+*.log
